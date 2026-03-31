@@ -1,0 +1,11 @@
+package com.navyblue.sportmatcher.auth.token.repository
+
+import com.navyblue.sportmatcher.auth.token.entity.RefreshToken
+import com.navyblue.sportmatcher.auth.user.entity.User
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.UUID
+
+interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
+    fun findByTokenHash(tokenHash: String): RefreshToken?
+    fun findAllByUserAndIsRevokedFalse(user: User): List<RefreshToken>
+}

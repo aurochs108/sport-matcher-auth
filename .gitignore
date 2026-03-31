@@ -38,3 +38,15 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Secrets & Environment ###
+.env
+.env.*
+!.env.example
+application-local.yaml
+application-local.yml
+application-secret.yaml
+application-secret.yml
+
+### macOS ###
+.DS_Store
