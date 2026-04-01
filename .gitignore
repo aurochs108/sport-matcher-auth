@@ -51,3 +51,6 @@ application-test.yaml
 
 ### macOS ###
 .DS_Store
+
+### Claude ###
+.claude/
