@@ -1,3 +1,3 @@
-package com.navyblue.sportmatcher.auth.exception
+package com.navyblue.sportmatcher.auth.registration.email
 
 class EmailAlreadyRegisteredException(message: String) : RuntimeException(message)

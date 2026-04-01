@@ -1,4 +1,4 @@
-package com.navyblue.sportmatcher.auth.registration.email.dto
+package com.navyblue.sportmatcher.auth.registration.dto
 
 data class AuthResponse(
     val accessToken: String,

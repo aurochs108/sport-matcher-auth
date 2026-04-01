@@ -1,6 +1,6 @@
 package com.navyblue.sportmatcher.auth.registration.email.controller
 
-import com.navyblue.sportmatcher.auth.registration.email.dto.AuthResponse
+import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
 import com.navyblue.sportmatcher.auth.registration.email.service.EmailRegistrationService
 import jakarta.validation.Valid

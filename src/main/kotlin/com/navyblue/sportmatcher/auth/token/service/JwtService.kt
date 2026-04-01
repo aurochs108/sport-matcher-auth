@@ -20,7 +20,7 @@ class JwtService(private val jwtProperties: JwtProperties) {
     fun generateAccessToken(userId: UUID, email: String): String {
         val now = Instant.now()
         return Jwts.builder()
-            .id(UUID.randomUUID().toString())  // jti — for future Redis blacklist on logout
+            .id(UUID.randomUUID().toString())
             .subject(userId.toString())
             .claim("email", email)
             .issuedAt(Date.from(now))

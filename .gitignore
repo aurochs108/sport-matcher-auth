@@ -47,6 +47,7 @@ application-local.yaml
 application-local.yml
 application-secret.yaml
 application-secret.yml
+application-test.yaml
 
 ### macOS ###
 .DS_Store

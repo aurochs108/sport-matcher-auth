@@ -1,4 +1,4 @@
-package com.navyblue.sportmatcher.auth.exception
+package com.navyblue.sportmatcher.auth.registration.email
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
