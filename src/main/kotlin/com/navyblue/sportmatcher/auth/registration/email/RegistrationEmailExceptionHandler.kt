@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class GlobalExceptionHandler {
+class RegistrationEmailExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyRegisteredException::class)
     fun handleEmailAlreadyRegistered(ex: EmailAlreadyRegisteredException): ResponseEntity<ErrorResponse> =

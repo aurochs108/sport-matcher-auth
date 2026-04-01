@@ -7,5 +7,4 @@ import java.util.UUID
 
 interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
     fun findByTokenHash(tokenHash: String): RefreshToken?
-    fun findAllByUserAndIsRevokedFalse(user: User): List<RefreshToken>
 }

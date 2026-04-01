@@ -10,7 +10,7 @@ data class EmailRegistrationRequest(
     val email: String,
 
     @field:NotBlank(message = "Password is required")
-    @field:Size(min = 8, message = "Password must be at least 12 characters")
+    @field:Size(min = 12, message = "Password must be at least 12 characters")
     val password: String,
 
     @field:NotBlank(message = "Device ID is required")
