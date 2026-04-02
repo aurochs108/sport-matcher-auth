@@ -14,7 +14,7 @@ import java.time.Instant
 class JwtService(private val jwtProperties: JwtProperties) {
 
     private val secretKey: SecretKey by lazy {
-        Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secret))
+        Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(jwtProperties.secret))
     }
 
     fun generateAccessToken(userId: UUID, email: String): String {
