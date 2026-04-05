@@ -30,8 +30,5 @@ class UserCredential(
     val provider: AuthProvider,
 
     @Column
-    val providerUserId: String? = null,
-
-    @Column
     val passwordHash: String? = null
 )
