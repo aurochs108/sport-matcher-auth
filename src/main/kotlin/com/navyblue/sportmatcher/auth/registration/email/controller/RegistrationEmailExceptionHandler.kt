@@ -1,5 +1,7 @@
-package com.navyblue.sportmatcher.auth.registration.email
+package com.navyblue.sportmatcher.auth.registration.email.controller
 
+import com.navyblue.sportmatcher.auth.dto.ErrorResponse
+import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -23,8 +25,3 @@ class RegistrationEmailExceptionHandler {
         )
     }
 }
-
-data class ErrorResponse(
-    val code: String,
-    val message: String
-)

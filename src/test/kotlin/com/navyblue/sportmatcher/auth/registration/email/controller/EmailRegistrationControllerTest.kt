@@ -1,9 +1,8 @@
 package com.navyblue.sportmatcher.auth.registration.email.controller
 
 import com.navyblue.sportmatcher.auth.config.SecurityConfig
-import com.navyblue.sportmatcher.auth.registration.email.RegistrationEmailExceptionHandler
 import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
-import com.navyblue.sportmatcher.auth.registration.email.EmailAlreadyRegisteredException
+import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.registration.email.service.EmailRegistrationService
 import org.junit.jupiter.api.Test
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
