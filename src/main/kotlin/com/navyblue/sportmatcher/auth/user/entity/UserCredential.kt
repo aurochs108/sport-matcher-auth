@@ -29,11 +29,9 @@ class UserCredential(
     @Column(nullable = false)
     val provider: AuthProvider,
 
-    // null for EMAIL provider
     @Column
     val providerUserId: String? = null,
 
-    // only for EMAIL provider
     @Column
     val passwordHash: String? = null
 )
