@@ -38,3 +38,16 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Secrets & Environment ###
+.env
+.env.*
+!.env.example
+application-test.yaml
+application-test.yml
+
+### macOS ###
+.DS_Store
+
+### Claude ###
+.claude/
