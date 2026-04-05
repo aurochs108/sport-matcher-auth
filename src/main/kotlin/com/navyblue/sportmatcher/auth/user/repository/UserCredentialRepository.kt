@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
 interface UserCredentialRepository : JpaRepository<UserCredential, UUID> {
-    fun findByUserAndProvider(user: User, provider: AuthProvider): UserCredential?
 }

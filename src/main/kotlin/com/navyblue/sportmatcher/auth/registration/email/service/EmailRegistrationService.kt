@@ -1,6 +1,5 @@
 package com.navyblue.sportmatcher.auth.registration.email.service
 
-import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
 import com.navyblue.sportmatcher.auth.config.JwtProperties
