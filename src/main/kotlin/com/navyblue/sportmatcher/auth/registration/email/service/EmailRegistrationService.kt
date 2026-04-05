@@ -3,6 +3,7 @@ package com.navyblue.sportmatcher.auth.registration.email.service
 import com.navyblue.sportmatcher.auth.registration.email.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
+import com.navyblue.sportmatcher.auth.config.JwtProperties
 import com.navyblue.sportmatcher.auth.token.service.JwtService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import com.navyblue.sportmatcher.auth.user.entity.AuthProvider
@@ -20,7 +21,8 @@ class EmailRegistrationService(
     private val userCredentialRepository: UserCredentialRepository,
     private val refreshTokenService: RefreshTokenService,
     private val jwtService: JwtService,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtProperties: JwtProperties
 ) {
 
     @Transactional
@@ -30,7 +32,6 @@ class EmailRegistrationService(
         }
 
         val user = userRepository.save(User(email = request.email))
-
         userCredentialRepository.save(
             UserCredential(
                 user = user,
@@ -41,11 +42,10 @@ class EmailRegistrationService(
 
         val accessToken = jwtService.generateAccessToken(user.id, user.email)
         val refreshToken = refreshTokenService.generateRefreshToken(user, request.deviceId)
-
         return AuthResponse(
             accessToken = accessToken,
             refreshToken = refreshToken,
-            expiresIn = 900
+            expiresIn = jwtProperties.accessTokenExpiration
         )
     }
 }

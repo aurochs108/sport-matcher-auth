@@ -32,7 +32,7 @@ class SecurityConfigTest {
 
     @Test
     fun `protected endpoint returns 403 when not authenticated`() {
-        mockMvc.get("/some/protected/endpoint").andExpect {
+        mockMvc.get("/random/protected/endpoint").andExpect {
             status { isForbidden() }
         }
     }
@@ -40,7 +40,7 @@ class SecurityConfigTest {
     @Test
     @WithMockUser
     fun `protected endpoint returns 404 when authenticated but endpoint does not exist`() {
-        mockMvc.get("/some/protected/endpoint").andExpect {
+        mockMvc.get("/random/protected/endpoint").andExpect {
             status { isNotFound() }
         }
     }

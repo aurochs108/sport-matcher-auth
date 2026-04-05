@@ -1,5 +1,6 @@
 package com.navyblue.sportmatcher.auth.registration.email.service
 
+import com.navyblue.sportmatcher.auth.config.JwtProperties
 import com.navyblue.sportmatcher.auth.registration.email.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
 import com.navyblue.sportmatcher.auth.token.service.JwtService
@@ -7,6 +8,7 @@ import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import com.navyblue.sportmatcher.auth.user.entity.User
 import com.navyblue.sportmatcher.auth.user.repository.UserCredentialRepository
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
@@ -23,9 +25,10 @@ class EmailRegistrationServiceTest {
     private val refreshTokenService: RefreshTokenService = mock()
     private val jwtService: JwtService = mock()
     private val passwordEncoder: PasswordEncoder = mock()
+    private val jwtProperties = JwtProperties(secret = "test-secret")
 
     private val service = EmailRegistrationService(
-        userRepository, userCredentialRepository, refreshTokenService, jwtService, passwordEncoder
+        userRepository, userCredentialRepository, refreshTokenService, jwtService, passwordEncoder, jwtProperties
     )
 
     private val request = EmailRegistrationRequest(
@@ -45,9 +48,12 @@ class EmailRegistrationServiceTest {
         whenever(refreshTokenService.generateRefreshToken(any(), any())).thenReturn("refresh-token")
 
         // when
-        service.register(request)
+        val response = service.register(request)
 
         // then
+        assertThat(response.accessToken).isEqualTo("access-token")
+        assertThat(response.refreshToken).isEqualTo("refresh-token")
+        assertThat(response.expiresIn).isEqualTo(jwtProperties.accessTokenExpiration)
         verify(userRepository).existsByEmail(request.email)
         verify(userRepository).save(any())
         verify(userCredentialRepository).save(any())
