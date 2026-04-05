@@ -43,8 +43,6 @@ out/
 .env
 .env.*
 !.env.example
-application.yaml
-application.yml
 application-test.yaml
 application-test.yml
 
