@@ -43,11 +43,10 @@ out/
 .env
 .env.*
 !.env.example
-application-local.yaml
-application-local.yml
-application-secret.yaml
-application-secret.yml
+application.yaml
+application.yml
 application-test.yaml
+application-test.yml
 
 ### macOS ###
 .DS_Store
