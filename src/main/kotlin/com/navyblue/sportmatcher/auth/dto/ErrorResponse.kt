@@ -2,5 +2,5 @@ package com.navyblue.sportmatcher.auth.dto
 
 data class ErrorResponse(
     val code: String,
-    val message: String
+    val message: String,
 )

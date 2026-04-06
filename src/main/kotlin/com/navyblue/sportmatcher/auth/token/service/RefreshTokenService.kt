@@ -13,11 +13,13 @@ import java.util.UUID
 @Service
 class RefreshTokenService(
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val jwtProperties: JwtProperties
+    private val jwtProperties: JwtProperties,
 ) {
-
     @Transactional
-    fun generateRefreshToken(user: User, deviceId: String): String {
+    fun generateRefreshToken(
+        user: User,
+        deviceId: String,
+    ): String {
         val rawToken = UUID.randomUUID().toString()
 
         refreshTokenRepository.save(
@@ -25,8 +27,8 @@ class RefreshTokenService(
                 tokenHash = hash(rawToken),
                 user = user,
                 deviceId = deviceId,
-                expiresAt = Instant.now().plusSeconds(jwtProperties.refreshTokenExpiration)
-            )
+                expiresAt = Instant.now().plusSeconds(jwtProperties.refreshTokenExpiration),
+            ),
         )
 
         return rawToken

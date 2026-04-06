@@ -16,23 +16,17 @@ import java.util.UUID
 class RefreshToken(
     @Id
     val id: UUID = UUID.randomUUID(),
-
     @Column(nullable = false, unique = true)
     val tokenHash: String,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
-
     @Column(nullable = false)
     val deviceId: String,
-
     @Column(nullable = false)
     val expiresAt: Instant,
-
     @Column(nullable = false)
     val createdAt: Instant = Instant.now(),
-
     @Column(nullable = false)
-    var isRevoked: Boolean = false
+    var isRevoked: Boolean = false,
 )

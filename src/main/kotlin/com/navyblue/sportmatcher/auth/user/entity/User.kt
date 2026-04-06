@@ -12,10 +12,8 @@ import java.util.UUID
 class User(
     @Id
     val id: UUID = UUID.randomUUID(),
-
     @Column(unique = true, nullable = false)
     val email: String,
-
     @Column(nullable = false)
-    val createdAt: Instant = Instant.now()
+    val createdAt: Instant = Instant.now(),
 )

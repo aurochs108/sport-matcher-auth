@@ -1,8 +1,8 @@
 package com.navyblue.sportmatcher.auth.registration.email.service
 
 import com.navyblue.sportmatcher.auth.config.JwtProperties
-import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
+import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.token.service.JwtService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import com.navyblue.sportmatcher.auth.user.entity.User
@@ -12,14 +12,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.mockito.kotlin.mock
 import org.springframework.security.crypto.password.PasswordEncoder
 
 class EmailRegistrationServiceTest {
-
     private val userRepository: UserRepository = mock()
     private val userCredentialRepository: UserCredentialRepository = mock()
     private val refreshTokenService: RefreshTokenService = mock()
@@ -27,15 +26,22 @@ class EmailRegistrationServiceTest {
     private val passwordEncoder: PasswordEncoder = mock()
     private val jwtProperties = JwtProperties(secret = "test-secret")
 
-    private val service = EmailRegistrationService(
-        userRepository, userCredentialRepository, refreshTokenService, jwtService, passwordEncoder, jwtProperties
-    )
+    private val service =
+        EmailRegistrationService(
+            userRepository,
+            userCredentialRepository,
+            refreshTokenService,
+            jwtService,
+            passwordEncoder,
+            jwtProperties,
+        )
 
-    private val request = EmailRegistrationRequest(
-        email = "test@example.com",
-        password = "Password123",
-        deviceId = "device-001"
-    )
+    private val request =
+        EmailRegistrationRequest(
+            email = "test@example.com",
+            password = "Password123",
+            deviceId = "device-001",
+        )
 
     @Test
     fun `register saves user and credential on successful registration`() {

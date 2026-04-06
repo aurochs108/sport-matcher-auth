@@ -1,16 +1,16 @@
-name: CI
+name: Gradle Setup
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_call:
+    inputs:
+      gradle-task:
+        required: true
+        type: string
 
 jobs:
-  test:
+  run:
     if: github.event.pull_request.draft != true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v5
@@ -22,4 +22,4 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew test
+      - run: ./gradlew ${{ inputs.gradle-task }}

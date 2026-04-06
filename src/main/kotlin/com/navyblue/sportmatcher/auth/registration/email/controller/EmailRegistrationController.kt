@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/auth/register/email")
 class EmailRegistrationController(
-    private val emailRegistrationService: EmailRegistrationService
+    private val emailRegistrationService: EmailRegistrationService,
 ) {
-
     @PostMapping
-    fun register(@Valid @RequestBody request: EmailRegistrationRequest): ResponseEntity<AuthResponse> {
+    fun register(
+        @Valid @RequestBody request: EmailRegistrationRequest,
+    ): ResponseEntity<AuthResponse> {
         val response = emailRegistrationService.register(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }

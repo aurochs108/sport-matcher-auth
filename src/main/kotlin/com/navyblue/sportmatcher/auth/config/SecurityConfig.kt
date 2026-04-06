@@ -9,7 +9,6 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 class SecurityConfig {
-
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder(12)
 
@@ -19,10 +18,11 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/register/**").permitAll()
-                    .anyRequest().authenticated()
-            }
-            .httpBasic { it.disable() }
+                    .requestMatchers("/auth/register/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            }.httpBasic { it.disable() }
             .formLogin { it.disable() }
         return http.build()
     }
