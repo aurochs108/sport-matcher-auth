@@ -11,7 +11,6 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 
 class RegistrationEmailExceptionHandlerTest {
-
     private val handler = RegistrationEmailExceptionHandler()
 
     @Test

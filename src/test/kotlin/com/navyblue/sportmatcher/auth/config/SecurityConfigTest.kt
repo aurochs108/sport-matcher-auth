@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.post
 @WebMvcTest(EmailRegistrationController::class)
 @Import(SecurityConfig::class)
 class SecurityConfigTest {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -24,10 +23,11 @@ class SecurityConfigTest {
 
     @Test
     fun `register endpoint is publicly accessible`() {
-        mockMvc.post("/auth/register/email") {
-        }.andExpect {
-            status { isBadRequest() }
-        }
+        mockMvc
+            .post("/auth/register/email") {
+            }.andExpect {
+                status { isBadRequest() }
+            }
     }
 
     @Test
