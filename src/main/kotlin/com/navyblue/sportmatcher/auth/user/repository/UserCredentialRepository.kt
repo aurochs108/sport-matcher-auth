@@ -4,5 +4,4 @@ import com.navyblue.sportmatcher.auth.user.entity.UserCredential
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface UserCredentialRepository : JpaRepository<UserCredential, UUID> {
-}
+interface UserCredentialRepository : JpaRepository<UserCredential, UUID>

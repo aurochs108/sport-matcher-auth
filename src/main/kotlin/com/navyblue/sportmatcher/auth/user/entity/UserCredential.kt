@@ -15,20 +15,17 @@ import java.util.UUID
 @Entity
 @Table(
     name = "user_credentials",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "provider"])]
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "provider"])],
 )
 class UserCredential(
     @Id
     val id: UUID = UUID.randomUUID(),
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val provider: AuthProvider,
-
     @Column
-    val passwordHash: String? = null
+    val passwordHash: String? = null,
 )

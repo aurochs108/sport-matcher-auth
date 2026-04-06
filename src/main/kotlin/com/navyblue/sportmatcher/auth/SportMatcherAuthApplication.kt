@@ -9,5 +9,5 @@ import org.springframework.boot.runApplication
 class SportMatcherAuthApplication
 
 fun main(args: Array<String>) {
-	runApplication<SportMatcherAuthApplication>(*args)
+    runApplication<SportMatcherAuthApplication>(*args)
 }
