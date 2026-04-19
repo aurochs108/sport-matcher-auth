@@ -10,6 +10,7 @@ import com.navyblue.sportmatcher.auth.user.entity.User
 import com.navyblue.sportmatcher.auth.user.entity.UserCredential
 import com.navyblue.sportmatcher.auth.user.repository.UserCredentialRepository
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
+import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,6 +24,7 @@ class EmailRegistrationService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtProperties: JwtProperties,
 ) {
+    private val logger = LoggerFactory.getLogger(EmailRegistrationService::class.java)
     @Transactional
     fun register(request: EmailRegistrationRequest): AuthResponse {
         if (userRepository.existsByEmail(request.email)) {
@@ -37,6 +39,8 @@ class EmailRegistrationService(
                 passwordHash = passwordEncoder.encode(request.password),
             ),
         )
+
+        logger.debug("User registered with email: {}", user.email)
 
         val accessToken = jwtService.generateAccessToken(user.id, user.email)
         val refreshToken = refreshTokenService.generateRefreshToken(user, request.deviceId)
