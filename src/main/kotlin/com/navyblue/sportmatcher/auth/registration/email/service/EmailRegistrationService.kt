@@ -25,6 +25,7 @@ class EmailRegistrationService(
     private val jwtProperties: JwtProperties,
 ) {
     private val logger = LoggerFactory.getLogger(EmailRegistrationService::class.java)
+
     @Transactional
     fun register(request: EmailRegistrationRequest): AuthResponse {
         if (userRepository.existsByEmail(request.email)) {
