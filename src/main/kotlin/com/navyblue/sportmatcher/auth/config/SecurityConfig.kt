@@ -22,6 +22,8 @@ class SecurityConfig {
                 auth
                     .requestMatchers("/auth/register/**")
                     .permitAll()
+                    .requestMatchers("/auth/login/**")
+                    .permitAll()
                     .anyRequest()
                     .authenticated()
             }.httpBasic { it.disable() }
