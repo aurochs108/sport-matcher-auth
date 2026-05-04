@@ -25,7 +25,7 @@ class EmailLoginController(
         try {
             val response = emailLoginService.login(request)
             ResponseEntity.ok(response)
-        } catch (ex: InvalidLoginCredentialsException) {
+        } catch (_: InvalidLoginCredentialsException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 ErrorResponse(code = "INVALID_LOGIN_CREDENTIALS"),
             )
