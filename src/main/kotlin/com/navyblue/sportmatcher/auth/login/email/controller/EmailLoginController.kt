@@ -23,7 +23,7 @@ class EmailLoginController(
         @Valid @RequestBody request: EmailLoginRequest,
     ): ResponseEntity<Any> =
         try {
-            val response: AuthResponse = emailLoginService.login(request)
+            val response = emailLoginService.login(request)
             ResponseEntity.ok(response)
         } catch (ex: InvalidLoginCredentialsException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
