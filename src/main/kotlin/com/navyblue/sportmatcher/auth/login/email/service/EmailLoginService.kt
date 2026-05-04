@@ -5,6 +5,7 @@ import com.navyblue.sportmatcher.auth.login.email.dto.EmailLoginRequest
 import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import com.navyblue.sportmatcher.auth.token.service.JwtService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
+import com.navyblue.sportmatcher.auth.utility.CredentialsLogUtility
 import com.navyblue.sportmatcher.auth.user.entity.AuthProvider
 import com.navyblue.sportmatcher.auth.user.repository.UserCredentialRepository
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
@@ -36,7 +37,7 @@ class EmailLoginService(
             throw invalidCredentials()
         }
 
-        logger.debug("User logged in with email: {}", user.email)
+        logger.debug("User logged in with email: {}", CredentialsLogUtility.maskEmail(user.email))
 
         val accessToken = jwtService.generateAccessToken(user.id, user.email)
         val refreshToken = refreshTokenService.generateRefreshToken(user, request.deviceId)
@@ -47,5 +48,6 @@ class EmailLoginService(
         )
     }
 
-    private fun invalidCredentials(): InvalidLoginCredentialsException = InvalidLoginCredentialsException("Invalid email or password")
+    private fun invalidCredentials(): InvalidLoginCredentialsException =
+        InvalidLoginCredentialsException("Invalid email or password")
 }
