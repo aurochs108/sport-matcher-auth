@@ -1,5 +1,7 @@
 package com.navyblue.sportmatcher.auth.config
 
+import com.navyblue.sportmatcher.auth.login.email.controller.EmailLoginController
+import com.navyblue.sportmatcher.auth.login.email.service.EmailLoginService
 import com.navyblue.sportmatcher.auth.registration.email.controller.EmailRegistrationController
 import com.navyblue.sportmatcher.auth.registration.email.service.EmailRegistrationService
 import org.junit.jupiter.api.Test
@@ -12,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-@WebMvcTest(EmailRegistrationController::class)
+@WebMvcTest(controllers = [EmailRegistrationController::class, EmailLoginController::class])
 @Import(SecurityConfig::class)
 class SecurityConfigTest {
     @Autowired
@@ -21,10 +23,22 @@ class SecurityConfigTest {
     @MockitoBean
     lateinit var emailRegistrationService: EmailRegistrationService
 
+    @MockitoBean
+    lateinit var emailLoginService: EmailLoginService
+
     @Test
     fun `register endpoint is publicly accessible`() {
         mockMvc
             .post("/auth/register/email") {
+            }.andExpect {
+                status { isBadRequest() }
+            }
+    }
+
+    @Test
+    fun `login endpoint is publicly accessible`() {
+        mockMvc
+            .post("/auth/login/email") {
             }.andExpect {
                 status { isBadRequest() }
             }
