@@ -4,7 +4,6 @@ import com.navyblue.sportmatcher.auth.dto.ErrorResponse
 import com.navyblue.sportmatcher.auth.login.email.dto.EmailLoginRequest
 import com.navyblue.sportmatcher.auth.login.email.service.EmailLoginService
 import com.navyblue.sportmatcher.auth.login.email.service.InvalidLoginCredentialsException
-import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

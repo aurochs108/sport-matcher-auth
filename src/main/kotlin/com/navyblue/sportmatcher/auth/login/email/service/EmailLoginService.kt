@@ -5,10 +5,10 @@ import com.navyblue.sportmatcher.auth.login.email.dto.EmailLoginRequest
 import com.navyblue.sportmatcher.auth.registration.dto.AuthResponse
 import com.navyblue.sportmatcher.auth.token.service.JwtService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
-import com.navyblue.sportmatcher.auth.utility.CredentialsLogUtility
 import com.navyblue.sportmatcher.auth.user.entity.AuthProvider
 import com.navyblue.sportmatcher.auth.user.repository.UserCredentialRepository
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
+import com.navyblue.sportmatcher.auth.utility.CredentialsLogUtility
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional
 class EmailLoginService(
     private val userRepository: UserRepository,
     private val userCredentialRepository: UserCredentialRepository,
-    private val refreshTokenService: RefreshTokenService,
-    private val jwtService: JwtService,
     private val passwordEncoder: PasswordEncoder,
+    private val jwtService: JwtService,
+    private val refreshTokenService: RefreshTokenService,
     private val jwtProperties: JwtProperties,
 ) {
     private val logger = LoggerFactory.getLogger(EmailLoginService::class.java)
@@ -48,6 +48,5 @@ class EmailLoginService(
         )
     }
 
-    private fun invalidCredentials(): InvalidLoginCredentialsException =
-        InvalidLoginCredentialsException("Invalid email or password")
+    private fun invalidCredentials(): InvalidLoginCredentialsException = InvalidLoginCredentialsException("Invalid email or password")
 }
