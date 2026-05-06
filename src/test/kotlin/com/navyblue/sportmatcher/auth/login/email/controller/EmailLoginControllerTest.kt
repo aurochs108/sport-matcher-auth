@@ -71,12 +71,12 @@ class EmailLoginControllerTest {
 
     @Test
     fun `login returns 401 when credentials are invalid`() {
-        val expectedEmail = "test@example.com"
-        val expectedPassword = "Password1234"
-        val expectedDeviceId = "device-001"
         whenever(emailLoginService.login(any()))
             .thenThrow(InvalidLoginCredentialsException("Invalid email or password"))
 
+        val expectedEmail = "test@example.com"
+        val expectedPassword = "Password1234"
+        val expectedDeviceId = "device-001"
         mockMvc
             .post("/auth/login/email") {
                 contentType = MediaType.APPLICATION_JSON

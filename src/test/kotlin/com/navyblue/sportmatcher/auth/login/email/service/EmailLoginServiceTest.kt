@@ -22,19 +22,19 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class EmailLoginServiceTest {
     private val userRepository: UserRepository = mock()
     private val userCredentialRepository: UserCredentialRepository = mock()
+    private val passwordEncoder: PasswordEncoder = mock()
     private val jwtService: JwtService = mock()
     private val refreshTokenService: RefreshTokenService = mock()
-    private val passwordEncoder: PasswordEncoder = mock()
     private val jwtProperties = JwtProperties(secret = "test-secret")
 
     private val service =
         EmailLoginService(
-            userRepository = userRepository,
-            userCredentialRepository = userCredentialRepository,
-            passwordEncoder = passwordEncoder,
-            jwtService = jwtService,
-            refreshTokenService = refreshTokenService,
-            jwtProperties = jwtProperties,
+            userRepository,
+            userCredentialRepository,
+            passwordEncoder,
+            jwtService,
+            refreshTokenService,
+            jwtProperties,
         )
 
     private val request =
