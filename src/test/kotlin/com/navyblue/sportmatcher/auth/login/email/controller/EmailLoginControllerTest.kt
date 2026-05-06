@@ -46,10 +46,18 @@ class EmailLoginControllerTest {
                 content = """{"email":"$expectedEmail","password":"$expectedPassword","deviceId":"$expectedDeviceId"}"""
             }.andExpect {
                 status { isOk() }
-                jsonPath("$.accessToken") { value("access-token") }
-                jsonPath("$.refreshToken") { value("refresh-token") }
-                jsonPath("$.tokenType") { value("Bearer") }
-                jsonPath("$.expiresIn") { value(900) }
+                content {
+                    json(
+                        """
+                        {
+                          "accessToken": "access-token",
+                          "refreshToken": "refresh-token",
+                          "tokenType": "Bearer",
+                          "expiresIn": 900
+                        }
+                        """.trimIndent(),
+                    )
+                }
             }
 
         verify(emailLoginService, times(1)).login(
@@ -63,16 +71,27 @@ class EmailLoginControllerTest {
 
     @Test
     fun `login returns 401 when credentials are invalid`() {
+        val expectedEmail = "test@example.com"
+        val expectedPassword = "Password1234"
+        val expectedDeviceId = "device-001"
         whenever(emailLoginService.login(any()))
             .thenThrow(InvalidLoginCredentialsException("Invalid email or password"))
 
         mockMvc
             .post("/auth/login/email") {
                 contentType = MediaType.APPLICATION_JSON
-                content = """{"email":"test@example.com","password":"Password1234","deviceId":"device-001"}"""
+                content = """{"email":"$expectedEmail","password":"$expectedPassword","deviceId":"$expectedDeviceId"}"""
             }.andExpect {
                 status { isUnauthorized() }
                 jsonPath("$.code") { value("INVALID_LOGIN_CREDENTIALS") }
             }
+
+        verify(emailLoginService, times(1)).login(
+            EmailLoginRequest(
+                email = expectedEmail,
+                password = expectedPassword,
+                deviceId = expectedDeviceId,
+            ),
+        )
     }
 }

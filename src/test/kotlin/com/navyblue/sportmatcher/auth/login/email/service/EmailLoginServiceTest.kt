@@ -29,12 +29,12 @@ class EmailLoginServiceTest {
 
     private val service =
         EmailLoginService(
-            userRepository,
-            userCredentialRepository,
-            jwtService,
-            refreshTokenService,
-            passwordEncoder,
-            jwtProperties,
+            userRepository = userRepository,
+            userCredentialRepository = userCredentialRepository,
+            passwordEncoder = passwordEncoder,
+            jwtService = jwtService,
+            refreshTokenService = refreshTokenService,
+            jwtProperties = jwtProperties,
         )
 
     private val request =
