@@ -16,12 +16,15 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-@WebMvcTest(controllers = [EmailRegistrationController::class, EmailLoginController::class, LogoutController::class])
+@WebMvcTest(controllers = [
+    EmailRegistrationController::class,
+    EmailLoginController::class,
+    LogoutController::class
+])
 @Import(SecurityConfig::class)
-class SecurityConfigTest {
-    @Autowired
-    lateinit var mockMvc: MockMvc
-
+class SecurityConfigTest (
+    @Autowired private val mockMvc: MockMvc,
+) {
     @MockitoBean
     lateinit var emailRegistrationService: EmailRegistrationService
 
