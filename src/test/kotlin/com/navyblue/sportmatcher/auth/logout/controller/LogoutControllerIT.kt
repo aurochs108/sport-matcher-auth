@@ -38,7 +38,7 @@ class LogoutControllerIT(
             }
 
         // then
-        assertThat(isRefreshTokenRevoked(savedRefreshToken.refreshTokenId)).isTrue()
+        assertThat(isRefreshTokenRevokedByDeviceId(savedRefreshToken.deviceId)).isTrue()
     }
 
     @Test
@@ -56,7 +56,7 @@ class LogoutControllerIT(
             }
 
         // then
-        assertThat(isRefreshTokenRevoked(savedRefreshToken.refreshTokenId)).isFalse()
+        assertThat(isRefreshTokenRevokedByDeviceId(savedRefreshToken.deviceId)).isFalse()
     }
 
     private fun saveRefreshToken(): SavedRefreshToken {
@@ -64,41 +64,28 @@ class LogoutControllerIT(
             userRepository.save(
                 User(email = "${UUID.randomUUID()}@example.com"),
             )
-        val rawToken = refreshTokenService.generateRefreshToken(user, UUID.randomUUID().toString())
-        val refreshTokenId = findRefreshTokenIdByUserId(user.id)
+        val deviceId = UUID.randomUUID().toString()
+        val refreshToken = refreshTokenService.generateRefreshToken(user, deviceId)
 
-        return SavedRefreshToken(rawToken, refreshTokenId)
+        return SavedRefreshToken(refreshToken, deviceId)
     }
 
     private data class SavedRefreshToken(
         val refreshToken: String,
-        val refreshTokenId: UUID,
+        val deviceId: String,
     )
 
-    @Suppress("ktlint:standard:function-expression-body")
-    private fun findRefreshTokenIdByUserId(userId: UUID): UUID {
-        return jdbcTemplate
-            .queryForObject(
-                """
-                    select id from refresh_tokens
-                    where user_id = ?
-                """,
-                UUID::class.java,
-                userId,
-            ) ?: error("Refresh token for user $userId was not found")
-    }
-
-    private fun isRefreshTokenRevoked(refreshTokenId: UUID): Boolean {
+    private fun isRefreshTokenRevokedByDeviceId(deviceId: String): Boolean {
         val isRevoked =
             jdbcTemplate.queryForObject(
                 """
                     select is_revoked from refresh_tokens
-                    where id = ?
+                    where device_id = ?
                 """,
                 Boolean::class.javaObjectType,
-                refreshTokenId,
+                deviceId,
             )
 
-        return isRevoked ?: error("Refresh token $refreshTokenId was not found")
+        return isRevoked ?: error("Refresh token for device $deviceId was not found")
     }
 }
