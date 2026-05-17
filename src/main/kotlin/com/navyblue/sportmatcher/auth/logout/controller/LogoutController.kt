@@ -19,7 +19,6 @@ class LogoutController(
         @Valid @RequestBody request: LogoutRequest,
     ): ResponseEntity<Void> {
         refreshTokenService.revokeRefreshToken(request.refreshToken)
-
         return ResponseEntity.noContent().build()
     }
 }
