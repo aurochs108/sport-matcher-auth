@@ -5,7 +5,6 @@ import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
@@ -26,7 +25,6 @@ class LogoutControllerTest {
     @Test
     fun `logout returns 204 and revokes refresh token`() {
         val refreshToken = "refresh-token"
-        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(true)
 
         mockMvc
             .post("/auth/logout") {
@@ -42,7 +40,6 @@ class LogoutControllerTest {
     @Test
     fun `logout returns 204 when refresh token does not exist`() {
         val refreshToken = "missing-refresh-token"
-        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(false)
 
         mockMvc
             .post("/auth/logout") {

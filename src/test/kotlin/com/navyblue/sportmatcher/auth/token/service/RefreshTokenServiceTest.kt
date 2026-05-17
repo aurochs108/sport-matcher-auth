@@ -2,10 +2,8 @@ package com.navyblue.sportmatcher.auth.token.service
 
 import com.navyblue.sportmatcher.auth.config.JwtProperties
 import com.navyblue.sportmatcher.auth.token.repository.RefreshTokenRepository
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.security.MessageDigest
 
 class RefreshTokenServiceTest {
@@ -14,30 +12,26 @@ class RefreshTokenServiceTest {
     private val service = RefreshTokenService(refreshTokenRepository, jwtProperties)
 
     @Test
-    fun `revokeRefreshToken returns true when token is revoked`() {
+    fun `revokeRefreshToken revokes token by hash`() {
         // given
         val rawToken = "refresh-token"
-        whenever(refreshTokenRepository.revokeByTokenHash(hash(rawToken))).thenReturn(1)
 
         // when
-        val revoked = service.revokeRefreshToken(rawToken)
+        service.revokeRefreshToken(rawToken)
 
         // then
-        assertThat(revoked).isTrue()
         verify(refreshTokenRepository).revokeByTokenHash(hash(rawToken))
     }
 
     @Test
-    fun `revokeRefreshToken returns false when token does not exist`() {
+    fun `revokeRefreshToken delegates missing token to repository update`() {
         // given
         val rawToken = "missing-refresh-token"
-        whenever(refreshTokenRepository.revokeByTokenHash(hash(rawToken))).thenReturn(0)
 
         // when
-        val revoked = service.revokeRefreshToken(rawToken)
+        service.revokeRefreshToken(rawToken)
 
         // then
-        assertThat(revoked).isFalse()
         verify(refreshTokenRepository).revokeByTokenHash(hash(rawToken))
     }
 
