@@ -4,17 +4,20 @@ import com.navyblue.sportmatcher.auth.config.JwtProperties
 import com.navyblue.sportmatcher.auth.token.repository.RefreshTokenRepository
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.security.MessageDigest
+import java.util.UUID
 
 class RefreshTokenServiceTest {
     private val refreshTokenRepository: RefreshTokenRepository = org.mockito.kotlin.mock()
-    private val jwtProperties = JwtProperties(secret = "test-secret")
+    private val jwtProperties = JwtProperties(secret = UUID.randomUUID().toString())
     private val service = RefreshTokenService(refreshTokenRepository, jwtProperties)
 
     @Test
     fun `revokeRefreshToken revokes token by hash`() {
         // given
-        val rawToken = "refresh-token"
+        val rawToken = UUID.randomUUID().toString()
+        whenever(refreshTokenRepository.revokeByTokenHash(rawToken)).thenReturn(1)
 
         // when
         service.revokeRefreshToken(rawToken)
@@ -24,9 +27,10 @@ class RefreshTokenServiceTest {
     }
 
     @Test
-    fun `revokeRefreshToken delegates missing token to repository update`() {
+    fun `revokeRefreshToken revokes not existing token by hash`() {
         // given
-        val rawToken = "missing-refresh-token"
+        val rawToken = UUID.randomUUID().toString()
+        whenever(refreshTokenRepository.revokeByTokenHash(rawToken)).thenReturn(0)
 
         // when
         service.revokeRefreshToken(rawToken)
