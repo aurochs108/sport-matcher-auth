@@ -12,6 +12,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
+import java.util.UUID
 
 @WebMvcTest(LogoutController::class)
 @Import(SecurityConfig::class)
@@ -24,22 +25,7 @@ class LogoutControllerTest {
 
     @Test
     fun `logout returns 204 and revokes refresh token`() {
-        val refreshToken = "refresh-token"
-
-        mockMvc
-            .post("/auth/logout") {
-                contentType = MediaType.APPLICATION_JSON
-                content = """{"refreshToken":"$refreshToken"}"""
-            }.andExpect {
-                status { isNoContent() }
-            }
-
-        verify(refreshTokenService).revokeRefreshToken(refreshToken)
-    }
-
-    @Test
-    fun `logout returns 204 when refresh token does not exist`() {
-        val refreshToken = "missing-refresh-token"
+        val refreshToken = UUID.randomUUID().toString()
 
         mockMvc
             .post("/auth/logout") {
