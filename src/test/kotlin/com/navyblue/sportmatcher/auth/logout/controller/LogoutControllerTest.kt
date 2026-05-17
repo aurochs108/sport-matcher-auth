@@ -26,7 +26,7 @@ class LogoutControllerTest {
     @Test
     fun `logout returns 204 and revokes refresh token`() {
         val refreshToken = "refresh-token"
-        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(1)
+        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(true)
 
         mockMvc
             .post("/auth/logout") {
@@ -40,17 +40,16 @@ class LogoutControllerTest {
     }
 
     @Test
-    fun `logout returns 404 when refresh token does not exist`() {
+    fun `logout returns 204 when refresh token does not exist`() {
         val refreshToken = "missing-refresh-token"
-        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(0)
+        whenever(refreshTokenService.revokeRefreshToken(refreshToken)).thenReturn(false)
 
         mockMvc
             .post("/auth/logout") {
                 contentType = MediaType.APPLICATION_JSON
                 content = """{"refreshToken":"$refreshToken"}"""
             }.andExpect {
-                status { isNotFound() }
-                jsonPath("$.code") { value("REFRESH_TOKEN_NOT_FOUND") }
+                status { isNoContent() }
             }
 
         verify(refreshTokenService).revokeRefreshToken(refreshToken)

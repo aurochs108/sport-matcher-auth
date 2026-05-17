@@ -35,10 +35,11 @@ class RefreshTokenService(
     }
 
     @Transactional
-    fun revokeRefreshToken(rawToken: String): Int {
+    fun revokeRefreshToken(rawToken: String): Boolean {
         val tokenHash = hash(rawToken)
+        val updatedRows = refreshTokenRepository.revokeByTokenHash(tokenHash)
 
-        return refreshTokenRepository.revokeByTokenHash(tokenHash)
+        return updatedRows > 0
     }
 
     private fun hash(token: String): String {

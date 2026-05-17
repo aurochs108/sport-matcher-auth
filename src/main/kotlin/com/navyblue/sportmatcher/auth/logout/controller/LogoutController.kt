@@ -1,10 +1,8 @@
 package com.navyblue.sportmatcher.auth.logout.controller
 
-import com.navyblue.sportmatcher.auth.dto.ErrorResponse
 import com.navyblue.sportmatcher.auth.logout.dto.LogoutRequest
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -19,12 +17,9 @@ class LogoutController(
     @PostMapping
     fun logout(
         @Valid @RequestBody request: LogoutRequest,
-    ): ResponseEntity<*> =
-        when (refreshTokenService.revokeRefreshToken(request.refreshToken)) {
-            0 ->
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ErrorResponse(code = "REFRESH_TOKEN_NOT_FOUND"),
-                )
-            else -> ResponseEntity.noContent().build<Void>()
-        }
+    ): ResponseEntity<Void> {
+        refreshTokenService.revokeRefreshToken(request.refreshToken)
+
+        return ResponseEntity.noContent().build()
+    }
 }

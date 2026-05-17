@@ -14,30 +14,30 @@ class RefreshTokenServiceTest {
     private val service = RefreshTokenService(refreshTokenRepository, jwtProperties)
 
     @Test
-    fun `revokeRefreshToken returns updated row count`() {
+    fun `revokeRefreshToken returns true when token is revoked`() {
         // given
         val rawToken = "refresh-token"
         whenever(refreshTokenRepository.revokeByTokenHash(hash(rawToken))).thenReturn(1)
 
         // when
-        val updatedRows = service.revokeRefreshToken(rawToken)
+        val revoked = service.revokeRefreshToken(rawToken)
 
         // then
-        assertThat(updatedRows).isEqualTo(1)
+        assertThat(revoked).isTrue()
         verify(refreshTokenRepository).revokeByTokenHash(hash(rawToken))
     }
 
     @Test
-    fun `revokeRefreshToken returns zero when token does not exist`() {
+    fun `revokeRefreshToken returns false when token does not exist`() {
         // given
         val rawToken = "missing-refresh-token"
         whenever(refreshTokenRepository.revokeByTokenHash(hash(rawToken))).thenReturn(0)
 
         // when
-        val updatedRows = service.revokeRefreshToken(rawToken)
+        val revoked = service.revokeRefreshToken(rawToken)
 
         // then
-        assertThat(updatedRows).isZero()
+        assertThat(revoked).isFalse()
         verify(refreshTokenRepository).revokeByTokenHash(hash(rawToken))
     }
 
