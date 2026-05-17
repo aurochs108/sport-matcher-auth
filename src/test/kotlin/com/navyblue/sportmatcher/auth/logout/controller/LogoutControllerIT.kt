@@ -16,9 +16,10 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.postgresql.PostgreSQLContainer
+import org.testcontainers.utility.DockerImageName
 import java.security.MessageDigest
 import java.time.Instant
 
@@ -99,7 +100,10 @@ class LogoutControllerIT(
 
     companion object {
         @Container
-        private val postgres = PostgreSQLContainer<Nothing>("postgres:16-alpine")
+        private val postgres =
+            PostgreSQLContainer(
+                DockerImageName.parse("postgres:16-alpine"),
+            )
 
         @JvmStatic
         @DynamicPropertySource
