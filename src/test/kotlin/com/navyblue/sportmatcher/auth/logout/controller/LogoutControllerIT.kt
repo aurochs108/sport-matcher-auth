@@ -1,7 +1,6 @@
 package com.navyblue.sportmatcher.auth.logout.controller
 
-import com.navyblue.sportmatcher.auth.token.entity.RefreshToken
-import com.navyblue.sportmatcher.auth.token.repository.RefreshTokenRepository
+import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import com.navyblue.sportmatcher.auth.user.entity.User
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -19,43 +19,40 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.postgresql.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
-import java.security.MessageDigest
-import java.time.Instant
 import java.util.UUID
 
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class LogoutControllerIT(
     @Autowired private val mockMvc: MockMvc,
-    @Autowired private val refreshTokenRepository: RefreshTokenRepository,
+    @Autowired private val jdbcTemplate: JdbcTemplate,
+    @Autowired private val refreshTokenService: RefreshTokenService,
     @Autowired private val userRepository: UserRepository,
 ) {
     @Test
     fun `logout revokes refresh token in database`() {
         // given
-        val rawToken = UUID.randomUUID().toString()
-        val refreshToken = saveRefreshToken(rawToken)
+        val savedRefreshToken = saveRefreshToken()
 
         // when
         mockMvc
             .post("/auth/logout") {
                 contentType = MediaType.APPLICATION_JSON
-                content = """{"refreshToken":"$rawToken"}"""
+                content = """{"refreshToken":"${savedRefreshToken.rawToken}"}"""
             }.andExpect {
                 status { isNoContent() }
             }
 
         // then
-        val revokedToken = refreshTokenRepository.findById(refreshToken.id).orElseThrow()
-        assertThat(revokedToken.isRevoked).isTrue()
+        assertThat(isRefreshTokenRevoked(savedRefreshToken.refreshTokenId)).isTrue()
     }
 
     @Test
     fun `logout returns 204 and does not revoke another token when refresh token does not exist`() {
         // given
-        val refreshToken = saveRefreshToken(UUID.randomUUID().toString())
+        val savedRefreshToken = saveRefreshToken()
 
         // when
         mockMvc
@@ -67,30 +64,43 @@ class LogoutControllerIT(
             }
 
         // then
-        val existingToken = refreshTokenRepository.findById(refreshToken.id).orElseThrow()
-        assertThat(existingToken.isRevoked).isFalse()
+        assertThat(isRefreshTokenRevoked(savedRefreshToken.refreshTokenId)).isFalse()
     }
 
-    private fun saveRefreshToken(rawToken: String): RefreshToken {
+    private fun saveRefreshToken(): SavedRefreshToken {
         val user =
             userRepository.save(
-                User(email = "${rawToken.replace("-", ".")}@example.com"),
+                User(email = "${UUID.randomUUID()}@example.com"),
+            )
+        val rawToken = refreshTokenService.generateRefreshToken(user, UUID.randomUUID().toString())
+        val refreshTokenId = findRefreshTokenIdByUserId(user.id)
+
+        return SavedRefreshToken(rawToken, refreshTokenId)
+    }
+
+    private fun findRefreshTokenIdByUserId(userId: UUID): UUID =
+        jdbcTemplate
+            .queryForObject(
+                "select id from refresh_tokens where user_id = ?",
+                UUID::class.java,
+                userId,
+            ) ?: error("Refresh token for user $userId was not found")
+
+    private fun isRefreshTokenRevoked(refreshTokenId: UUID): Boolean {
+        val isRevoked =
+            jdbcTemplate.queryForObject(
+                "select is_revoked from refresh_tokens where id = ?",
+                Boolean::class.javaObjectType,
+                refreshTokenId,
             )
 
-        return refreshTokenRepository.save(
-            RefreshToken(
-                tokenHash = hash(rawToken),
-                user = user,
-                deviceId = "device-001",
-                expiresAt = Instant.now().plusSeconds(3600),
-            ),
-        )
+        return isRevoked ?: error("Refresh token $refreshTokenId was not found")
     }
 
-    private fun hash(token: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(token.toByteArray(Charsets.UTF_8))
-        return bytes.joinToString("") { "%02x".format(it) }
-    }
+    private data class SavedRefreshToken(
+        val rawToken: String,
+        val refreshTokenId: UUID,
+    )
 
     companion object {
         @Container
