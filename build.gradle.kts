@@ -64,3 +64,21 @@ tasks.withType<Test> {
         events("passed", "skipped", "failed")
     }
 }
+
+tasks.named<Test>("test") {
+    exclude("**/*IT.class")
+}
+
+tasks.register<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    shouldRunAfter(tasks.named("test"))
+    include("**/*IT.class")
+}
+
+tasks.named("check") {
+    dependsOn(tasks.named("integrationTest"))
+}

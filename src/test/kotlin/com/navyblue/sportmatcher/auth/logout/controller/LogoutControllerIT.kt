@@ -5,7 +5,6 @@ import com.navyblue.sportmatcher.auth.token.repository.RefreshTokenRepository
 import com.navyblue.sportmatcher.auth.user.entity.User
 import com.navyblue.sportmatcher.auth.user.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,6 +21,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import java.security.MessageDigest
 import java.time.Instant
+import java.util.UUID
 
 @Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
@@ -32,16 +32,10 @@ class LogoutControllerIT(
     @Autowired private val refreshTokenRepository: RefreshTokenRepository,
     @Autowired private val userRepository: UserRepository,
 ) {
-    @BeforeEach
-    fun cleanDatabase() {
-        refreshTokenRepository.deleteAll()
-        userRepository.deleteAll()
-    }
-
     @Test
     fun `logout revokes refresh token in database`() {
         // given
-        val rawToken = "refresh-token"
+        val rawToken = UUID.randomUUID().toString()
         val refreshToken = saveRefreshToken(rawToken)
 
         // when
@@ -61,7 +55,7 @@ class LogoutControllerIT(
     @Test
     fun `logout returns 204 and does not revoke another token when refresh token does not exist`() {
         // given
-        val refreshToken = saveRefreshToken("existing-refresh-token")
+        val refreshToken = saveRefreshToken(UUID.randomUUID().toString())
 
         // when
         mockMvc
