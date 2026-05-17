@@ -34,6 +34,12 @@ class RefreshTokenService(
         return rawToken
     }
 
+    @Transactional
+    fun revokeRefreshToken(rawToken: String) {
+        val tokenHash = hash(rawToken)
+        refreshTokenRepository.revokeByTokenHash(tokenHash)
+    }
+
     private fun hash(token: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(token.toByteArray(Charsets.UTF_8))
         return bytes.joinToString("") { "%02x".format(it) }
