@@ -13,7 +13,7 @@ abstract class PostgresContainerSupport {
         @Container
         private val postgres =
             PostgreSQLContainer(
-                DockerImageName.parse("postgres:16-alpine"),
+                DockerImageName.parse("postgres:18-alpine"),
             )
 
         @JvmStatic
