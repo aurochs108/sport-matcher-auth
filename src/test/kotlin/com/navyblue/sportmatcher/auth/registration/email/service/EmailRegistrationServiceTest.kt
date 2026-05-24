@@ -2,7 +2,6 @@ package com.navyblue.sportmatcher.auth.registration.email.service
 
 import com.navyblue.sportmatcher.auth.config.JwtProperties
 import com.navyblue.sportmatcher.auth.registration.email.dto.EmailRegistrationRequest
-import com.navyblue.sportmatcher.auth.registration.email.service.EmailAlreadyRegisteredException
 import com.navyblue.sportmatcher.auth.token.service.JwtService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import com.navyblue.sportmatcher.auth.user.entity.User
@@ -48,7 +47,7 @@ class EmailRegistrationServiceTest {
         // given
         val savedUser = User(email = request.email)
         whenever(userRepository.existsByEmail(request.email)).thenReturn(false)
-        whenever(userRepository.save(any())).thenReturn(savedUser)
+        whenever(userRepository.save(any<User>())).thenReturn(savedUser)
         whenever(passwordEncoder.encode(request.password)).thenReturn("hashed")
         whenever(jwtService.generateAccessToken(any(), any())).thenReturn("access-token")
         whenever(refreshTokenService.generateRefreshToken(any(), any())).thenReturn("refresh-token")
@@ -61,7 +60,7 @@ class EmailRegistrationServiceTest {
         assertThat(response.refreshToken).isEqualTo("refresh-token")
         assertThat(response.expiresIn).isEqualTo(jwtProperties.accessTokenExpiration)
         verify(userRepository).existsByEmail(request.email)
-        verify(userRepository).save(any())
+        verify(userRepository).save(any<User>())
         verify(userCredentialRepository).save(any())
         verify(jwtService).generateAccessToken(savedUser.id, savedUser.email)
         verify(refreshTokenService).generateRefreshToken(savedUser, request.deviceId)
