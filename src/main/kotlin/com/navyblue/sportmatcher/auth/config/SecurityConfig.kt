@@ -25,8 +25,7 @@ class SecurityConfig {
                         "/auth/login/**",
                         "/auth/logout",
                         "/auth/refresh",
-                    )
-                    .permitAll()
+                    ).permitAll()
                     .anyRequest()
                     .authenticated()
             }.httpBasic { it.disable() }

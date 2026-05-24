@@ -5,6 +5,8 @@ import com.navyblue.sportmatcher.auth.login.email.service.EmailLoginService
 import com.navyblue.sportmatcher.auth.logout.controller.LogoutController
 import com.navyblue.sportmatcher.auth.registration.email.controller.EmailRegistrationController
 import com.navyblue.sportmatcher.auth.registration.email.service.EmailRegistrationService
+import com.navyblue.sportmatcher.auth.token.controller.RefreshTokenController
+import com.navyblue.sportmatcher.auth.token.service.RefreshAccessTokenService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.post
         EmailRegistrationController::class,
         EmailLoginController::class,
         LogoutController::class,
+        RefreshTokenController::class,
     ],
 )
 @Import(SecurityConfig::class)
@@ -35,6 +38,9 @@ class SecurityConfigTest(
 
     @MockitoBean
     lateinit var refreshTokenService: RefreshTokenService
+
+    @MockitoBean
+    lateinit var refreshAccessTokenService: RefreshAccessTokenService
 
     @Test
     fun `register endpoint is publicly accessible`() {
@@ -58,6 +64,15 @@ class SecurityConfigTest(
     fun `logout endpoint is publicly accessible`() {
         mockMvc
             .post("/auth/logout") {
+            }.andExpect {
+                status { isBadRequest() }
+            }
+    }
+
+    @Test
+    fun `refresh endpoint is publicly accessible`() {
+        mockMvc
+            .post("/auth/refresh") {
             }.andExpect {
                 status { isBadRequest() }
             }

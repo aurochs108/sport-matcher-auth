@@ -21,7 +21,8 @@ class RefreshTokenController(
         @Valid @RequestBody request: RefreshAccessTokenRequest,
     ): ResponseEntity<*> =
         try {
-            ResponseEntity.ok(refreshAccessTokenService.refreshAccessToken(request.refreshToken))
+            val authResponse = refreshAccessTokenService.refreshAccessToken(request.refreshToken)
+            ResponseEntity.ok(authResponse)
         } catch (_: InvalidRefreshTokenException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<Void>()
         }
