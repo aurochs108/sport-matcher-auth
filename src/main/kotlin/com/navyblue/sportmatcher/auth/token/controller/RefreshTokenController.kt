@@ -1,6 +1,5 @@
 package com.navyblue.sportmatcher.auth.token.controller
 
-import com.navyblue.sportmatcher.auth.dto.ErrorResponse
 import com.navyblue.sportmatcher.auth.token.dto.RefreshAccessTokenRequest
 import com.navyblue.sportmatcher.auth.token.service.InvalidRefreshTokenException
 import com.navyblue.sportmatcher.auth.token.service.RefreshAccessTokenService
@@ -20,12 +19,10 @@ class RefreshTokenController(
     @PostMapping
     fun refreshAccessToken(
         @Valid @RequestBody request: RefreshAccessTokenRequest,
-    ): ResponseEntity<Any> =
+    ): ResponseEntity<*> =
         try {
             ResponseEntity.ok(refreshAccessTokenService.refreshAccessToken(request.refreshToken))
         } catch (_: InvalidRefreshTokenException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                ErrorResponse(code = "INVALID_REFRESH_TOKEN"),
-            )
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<Void>()
         }
 }
