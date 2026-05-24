@@ -12,11 +12,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @WebMvcTest(
     controllers = [
@@ -29,6 +32,7 @@ import org.springframework.test.web.servlet.post
 @Import(SecurityConfig::class)
 class SecurityConfigTest(
     @Autowired private val mockMvc: MockMvc,
+    @Autowired private val passwordEncoder: PasswordEncoder,
 ) {
     @MockitoBean
     lateinit var emailRegistrationService: EmailRegistrationService
@@ -76,6 +80,17 @@ class SecurityConfigTest(
             }.andExpect {
                 status { isBadRequest() }
             }
+    }
+
+    @Test
+    fun `password encoder encodes passwords with bcrypt`() {
+        val rawPassword = "Password1234"
+
+        val encodedPassword = requireNotNull(passwordEncoder.encode(rawPassword))
+
+        assertTrue(passwordEncoder.matches(rawPassword, encodedPassword))
+        assertFalse(passwordEncoder.matches("wrong-password", encodedPassword))
+        assertTrue(encodedPassword.startsWith("\$2"))
     }
 
     @Test
