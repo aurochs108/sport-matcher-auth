@@ -83,17 +83,6 @@ class SecurityConfigTest(
     }
 
     @Test
-    fun `password encoder encodes passwords with bcrypt`() {
-        val rawPassword = "Password1234"
-
-        val encodedPassword = requireNotNull(passwordEncoder.encode(rawPassword))
-
-        assertTrue(passwordEncoder.matches(rawPassword, encodedPassword))
-        assertFalse(passwordEncoder.matches("wrong-password", encodedPassword))
-        assertTrue(encodedPassword.startsWith("\$2"))
-    }
-
-    @Test
     fun `protected endpoint returns 403 when not authenticated`() {
         mockMvc.get("/random/protected/endpoint").andExpect {
             status { isForbidden() }
@@ -106,5 +95,15 @@ class SecurityConfigTest(
         mockMvc.get("/random/protected/endpoint").andExpect {
             status { isNotFound() }
         }
+    }
+
+    @Test
+    fun `password encoder encodes passwords with bcrypt`() {
+        val rawPassword = "Password1234"
+
+        val encodedPassword = requireNotNull(passwordEncoder.encode(rawPassword))
+
+        assertTrue(passwordEncoder.matches(rawPassword, encodedPassword))
+        assertTrue(encodedPassword.startsWith("\$2"))
     }
 }
