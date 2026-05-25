@@ -27,7 +27,7 @@ class RefreshTokenControllerTest {
     lateinit var refreshAccessTokenService: RefreshAccessTokenService
 
     @Test
-    fun `refreshAccessToken returns 200 with tokens on successful refresh`() {
+    fun `refreshAccessToken returns HTTP 200 with tokens on successful refresh`() {
         val refreshToken = UUID.randomUUID().toString()
         whenever(refreshAccessTokenService.refreshAccessToken(refreshToken)).thenReturn(
             AuthResponse(
@@ -53,7 +53,7 @@ class RefreshTokenControllerTest {
     }
 
     @Test
-    fun `refreshAccessToken returns 401 without body when refresh token is invalid`() {
+    fun `refreshAccessToken returns HTTP 401 without body when refresh token is invalid`() {
         val refreshToken = UUID.randomUUID().toString()
         whenever(refreshAccessTokenService.refreshAccessToken(refreshToken))
             .thenThrow(InvalidRefreshTokenException("Invalid refresh token"))
@@ -71,7 +71,7 @@ class RefreshTokenControllerTest {
     }
 
     @Test
-    fun `refreshAccessToken returns 400 when refresh token is blank`() {
+    fun `refreshAccessToken returns HTTP 400 when refresh token is blank`() {
         mockMvc
             .post("/auth/refresh") {
                 contentType = MediaType.APPLICATION_JSON

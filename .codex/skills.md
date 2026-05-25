@@ -13,3 +13,4 @@
   """
   ```
 - Never clean the database in integration tests. Use unique random values for test data so tests do not depend on database cleanup.
+- Controller test names must include the expected HTTP status, written as `HTTP 200`, `HTTP 400`, `HTTP 401`, etc.

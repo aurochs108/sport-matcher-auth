@@ -25,7 +25,7 @@ class RefreshTokenControllerIT(
     @Autowired private val jwtProperties: JwtProperties,
 ) : PostgresContainerSupport() {
     @Test
-    fun `refreshAccessToken returns 200 with new access token for valid refresh token`() {
+    fun `refreshAccessToken returns HTTP 200 with new access token for valid refresh token`() {
         val refreshToken = saveRefreshToken()
 
         mockMvc
@@ -42,7 +42,7 @@ class RefreshTokenControllerIT(
     }
 
     @Test
-    fun `refreshAccessToken returns 401 without body for missing refresh token`() {
+    fun `refreshAccessToken returns HTTP 401 without body for missing refresh token`() {
         mockMvc
             .post("/auth/refresh") {
                 contentType = MediaType.APPLICATION_JSON
