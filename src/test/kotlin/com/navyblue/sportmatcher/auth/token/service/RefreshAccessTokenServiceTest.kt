@@ -31,6 +31,7 @@ class RefreshAccessTokenServiceTest {
                 rawToken = rawToken,
                 user = user,
                 expiresAt = Instant.now().plusSeconds(60),
+                isRevoked = false,
             )
         whenever(refreshTokenRepository.findByTokenHash(hash(rawToken))).thenReturn(refreshToken)
         whenever(jwtService.generateAccessToken(user.id, user.email)).thenReturn("new-access-token")
@@ -92,6 +93,7 @@ class RefreshAccessTokenServiceTest {
             refreshToken(
                 rawToken = rawToken,
                 expiresAt = Instant.now().minusSeconds(60),
+                isRevoked = false,
             )
         whenever(refreshTokenRepository.findByTokenHash(hash(rawToken))).thenReturn(refreshToken)
 
@@ -109,7 +111,7 @@ class RefreshAccessTokenServiceTest {
         rawToken: String,
         user: User = User(email = "${UUID.randomUUID()}@example.com"),
         expiresAt: Instant,
-        isRevoked: Boolean = false,
+        isRevoked: Boolean,
     ): RefreshToken =
         RefreshToken(
             tokenHash = hash(rawToken),
