@@ -5,27 +5,33 @@ import com.navyblue.sportmatcher.auth.login.email.service.EmailLoginService
 import com.navyblue.sportmatcher.auth.logout.controller.LogoutController
 import com.navyblue.sportmatcher.auth.registration.email.controller.EmailRegistrationController
 import com.navyblue.sportmatcher.auth.registration.email.service.EmailRegistrationService
+import com.navyblue.sportmatcher.auth.token.controller.RefreshTokenController
+import com.navyblue.sportmatcher.auth.token.service.RefreshAccessTokenService
 import com.navyblue.sportmatcher.auth.token.service.RefreshTokenService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import kotlin.test.assertTrue
 
 @WebMvcTest(
     controllers = [
         EmailRegistrationController::class,
         EmailLoginController::class,
         LogoutController::class,
+        RefreshTokenController::class,
     ],
 )
 @Import(SecurityConfig::class)
 class SecurityConfigTest(
     @Autowired private val mockMvc: MockMvc,
+    @Autowired private val passwordEncoder: PasswordEncoder,
 ) {
     @MockitoBean
     lateinit var emailRegistrationService: EmailRegistrationService
@@ -35,6 +41,9 @@ class SecurityConfigTest(
 
     @MockitoBean
     lateinit var refreshTokenService: RefreshTokenService
+
+    @MockitoBean
+    lateinit var refreshAccessTokenService: RefreshAccessTokenService
 
     @Test
     fun `register endpoint is publicly accessible`() {
@@ -64,6 +73,15 @@ class SecurityConfigTest(
     }
 
     @Test
+    fun `refresh endpoint is publicly accessible`() {
+        mockMvc
+            .post("/auth/refresh") {
+            }.andExpect {
+                status { isBadRequest() }
+            }
+    }
+
+    @Test
     fun `protected endpoint returns 403 when not authenticated`() {
         mockMvc.get("/random/protected/endpoint").andExpect {
             status { isForbidden() }
@@ -76,5 +94,15 @@ class SecurityConfigTest(
         mockMvc.get("/random/protected/endpoint").andExpect {
             status { isNotFound() }
         }
+    }
+
+    @Test
+    fun `password encoder encodes passwords with bcrypt`() {
+        val rawPassword = "Password1234"
+
+        val encodedPassword = requireNotNull(passwordEncoder.encode(rawPassword))
+
+        assertTrue(passwordEncoder.matches(rawPassword, encodedPassword))
+        assertTrue(encodedPassword.startsWith("\$2"))
     }
 }

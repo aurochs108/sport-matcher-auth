@@ -20,8 +20,12 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/register/**", "/auth/login/**", "/auth/logout")
-                    .permitAll()
+                    .requestMatchers(
+                        "/auth/register/**",
+                        "/auth/login/**",
+                        "/auth/logout",
+                        "/auth/refresh",
+                    ).permitAll()
                     .anyRequest()
                     .authenticated()
             }.httpBasic { it.disable() }

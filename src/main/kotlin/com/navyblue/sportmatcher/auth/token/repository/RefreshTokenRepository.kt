@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param
 import java.util.UUID
 
 interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
+    fun findByTokenHash(tokenHash: String): RefreshToken?
+
     @Modifying
     @Query(
         """
