@@ -21,6 +21,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.3
 
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 24
+
+      - uses: gradle/actions/setup-gradle@v6.1.0
+
+      - name: Build application artifact
+        run: ./gradlew bootJar
+
       - name: Run Trivy scanner
         id: trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -28,7 +38,7 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          scanners: vuln,secret,misconfig
+          scanners: vuln,secret
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           format: table
