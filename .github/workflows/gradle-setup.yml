@@ -20,6 +20,6 @@ jobs:
           distribution: temurin
           java-version: 24
 
-      - uses: gradle/actions/setup-gradle@v6.1.1
+      - uses: gradle/actions/setup-gradle@v6.2.0
 
       - run: ./gradlew ${{ inputs.gradle-task }}
