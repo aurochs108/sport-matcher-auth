@@ -15,7 +15,7 @@ extra["tomcat.version"] = "11.0.22"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
